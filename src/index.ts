@@ -36,6 +36,8 @@ async function main() {
         await runMigrations();
         app.listen(PORT, () => {
             console.log(`🚀 DBTC API running on http://localhost:${PORT}`);
+            console.log(`CORS_ORIGIN: ${process.env.CORS_ORIGIN}`);
+            console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
         });
     } catch (err) {
         console.error('Failed to start server:', err);

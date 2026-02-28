@@ -8,7 +8,7 @@ const SALT_ROUNDS = 12;
 const TOKEN_EXPIRY = '7d';
 const COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 
-function setCookieToken(res: Response, userId: string): void {
+function setCookieToken(res: Response, userId: string): string {
     const token = jwt.sign({ userId }, process.env.JWT_SECRET!, { expiresIn: TOKEN_EXPIRY });
     res.cookie('token', token, {
         httpOnly: true,
@@ -16,6 +16,7 @@ function setCookieToken(res: Response, userId: string): void {
         sameSite: 'strict',
         maxAge: COOKIE_MAX_AGE,
     });
+    return token;
 }
 
 // POST /auth/register
@@ -37,8 +38,8 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
             [email.toLowerCase(), password_hash]
         );
         const user = result.rows[0];
-        setCookieToken(res, user.id);
-        res.status(201).json({ user: { id: user.id, email: user.email } });
+        const token = setCookieToken(res, user.id);
+        res.status(201).json({ user: { id: user.id, email: user.email }, token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -64,8 +65,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
             res.status(401).json({ error: 'Invalid credentials' });
             return;
         }
-        setCookieToken(res, user.id);
-        res.json({ user: { id: user.id, email: user.email } });
+        const token = setCookieToken(res, user.id);
+        res.json({ user: { id: user.id, email: user.email }, token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
