@@ -18,11 +18,11 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use('/auth', authRoutes);
-app.use('/habits', habitRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/habits', habitRoutes);
 
 // Health check
-app.get('/health', (_req, res) => {
+app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 

@@ -30,7 +30,7 @@ services:
       DATABASE_URL: postgresql://dbtc_user:dbtc_pass@postgres:5432/dbtc_db
       JWT_SECRET: ${JWT_SECRET:-please_change_this_in_production}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
-      NODE_ENV: development
+      NODE_ENV: ${NODE_ENV:-development}
     depends_on:
       postgres:
         condition: service_healthy
