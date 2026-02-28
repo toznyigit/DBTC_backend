@@ -10,13 +10,16 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- 'boolean' | 'counter' | 'gauge'
+DROP TYPE IF EXISTS habit_type CASCADE;
+DROP TYPE IF EXISTS counter_direction CASCADE;
 CREATE TYPE habit_type AS ENUM ('boolean', 'counter', 'gauge');
 
 -- 'gte' = fulfilled when value >= goal (e.g. drink 8 glasses)
 -- 'lte' = fulfilled when value <= goal (e.g. smoke 0 cigarettes)
 CREATE TYPE counter_direction AS ENUM ('gte', 'lte');
 
-CREATE TABLE IF NOT EXISTS habits (
+DROP TABLE IF EXISTS habits CASCADE;
+CREATE TABLE habits (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id     UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   name        TEXT NOT NULL CHECK (char_length(name) BETWEEN 1 AND 100),
