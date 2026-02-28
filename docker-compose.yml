@@ -39,15 +39,16 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     restart: unless-stopped
     ports:
       - '3000:3000'
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
       NODE_ENV: ${NODE_ENV:-production}
     depends_on:
       backend:
-        condition: service_healthy
+        condition: service_started
 
 volumes:
   pgdata:
